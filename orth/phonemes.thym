@@ -1,0 +1,154 @@
+# This is where you specify the "phonemes" for your language.
+# Phonemes (are supposed to) represent the sounds your language
+# uses to indicate meaning. Essentially, this is a list of
+# names (sometimes together with properties) that can then each
+# be interpreted as a phoneme in the language.
+
+# For example: let's say one orthography uses "th" to represent
+# the sound made by the "th" in the English word "thing". Another
+# orthography might use the letter "Þ/þ" while another might use
+# "Θ/θ". We would then add a phoneme named "th" to our list here
+# to represent that sound. 
+
+# However, sometimes languages need "extra letters" that may have
+# seemingly redundant pronunciations. For example, in the Breton
+# language's Perunvan orthography, the letter "zh" is pronounced the
+# same as "z" in most dialects, but is pronounced the same as "h"
+# in the Gwenedeg dialect. Thus, it would require a separate "zh"
+# phoneme, despite the sounds it makes already being covered by "z"
+# and "h".
+
+
+# However, before we get to that, we first specify the possible
+# properties of our phonemes. Properties are divided into two
+# kinds: aspects and traits. 
+
+# Aspects are used to "subdivide" a phoneme into multiple values.
+# For instance, a phoneme could be either aspirated or unaspirated.
+# To indicate this, we would add a line such as the following:
+
+aspect aspiration : asp unasp
+
+# This would mean we could add the "aspiration" aspect to a phoneme,
+# and then every time we used that phoneme, we would have to specify
+# whether it is aspirated or unaspirated. You can have any (positive)
+# number of options for an aspect, though it doesn't make sense to use
+# fewer than two.
+
+# If you're only using at most one or two aspect(s) for only a few
+# phonemes, you might just be better off creating additional phonemes
+# for those cases; there aren't many benefits to using aspects in that
+# case. However, if you have a lot of aspects on a single phoneme, it
+# might make things easier for you.
+
+
+# The second kind of property, "traits", are simply used to provide more
+# information about an individual phoneme. Unlike aspects, the value of
+# a trait is always the same for the same phoneme. These can be used if
+# your language has rules that divide phonemes into sets*, and the value
+# of a phoneme can depend on which set the previous or next phoneme falls
+# into.
+
+# * You can also use groups to divide your phonemes into sets, which is
+# more efficient but less versatile.
+
+# There are two kinds of traits: boolean traits and value-traits. Boolean
+# traits can only either be True or False; they're useful when defining
+# whether a phoneme belongs to a certain set or not. You can define one
+# by just writing "trait <trait-name>". e.g.
+
+trait nasal
+
+# Value-traits are more complex; they have a list of values into which a
+# phoneme with that trait can fall. You define them like you would an aspect,
+# but with "trait" instead of "aspect". e.g.
+
+trait position : front, centre, back
+
+# At the moment, traits are only used by the output function to find out
+# more about the next phoneme in the list, but they may be used more in
+# the future.
+
+
+# Next, we move on to defining the actual phonemes. However, to indicate
+# that we are moving on to the next section, we add 4 (or more) equal signs
+# in a row at the start of a line.
+
+====
+
+# Now, we need to talk about groups. Groups are another way to divide your
+# phonemes into sets, but they only work hierarchically.
+
+# Basically, you can either avoid groups altogether (in which case you
+# just list out all your phonemes one by one), or you can create a tree
+# that specifies which group each phoneme belongs to. 
+
+# Probably the most common way to use groups is to divide your phonemes
+# into vowels and consonants.
+
+# To start a group, you start a that starts with an asterisk (*), followed
+# by the name of the group. e.g. 
+
+* vowel
+
+# You can then list out all the phonemes in this group, like so:
+a : position=front # see below for what this means
+e : position=front
+i : position=front
+o : position=back
+u : position=back
+schwa : position=centre
+aw : position=back
+oo : position=back
+
+# You can then start the next group by again writing an asterisk 
+# followed by the name of the group. You can even have sub-groups.
+# To specify a sub-group, you start a line with two asterisks, 
+# followed by the name of the sub-group. Be careful, though; you
+# can't mix phonemes and sub-groups in the same group. So something like
+#
+# * consonant
+# k
+# g
+# h
+# ** fronted
+# t
+# d
+# ...
+#
+# Would be wrong. You can, however, have arbitrarily many levels of
+# nested sub-groups, which you can specify by just starting a line
+# with the appropriate number of asterisks, followed by the name of
+# the sub(-sub)*-group.
+
+* consonant
+
+# To specify that an aspect or boolean trait applies to a phoneme,
+# you write a colon after the phoneme, followed by a(n optionally comma-separated)
+# list of the traits and aspects that apply. For value-traits, you have
+# to write the name followed by an equal sign, followed by the value name.
+# e.g. (position=front) (as seen above).
+
+** labial
+p : aspiration
+b
+m : nasal
+v
+f
+
+** alveolar
+t : aspiration
+d
+n : nasal
+r
+l
+th
+dh
+
+** other
+k : aspiration
+g
+ng : nasal
+h
+
+

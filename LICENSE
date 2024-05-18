@@ -1,4 +1,4 @@
-Copyright 2024 Author name here
+Copyright {{author-name}}{{^author-name}}Author name here{{/author-name}} (c) {{year}}{{^year}}2024{{/year}}
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

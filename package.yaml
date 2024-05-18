@@ -1,10 +1,11 @@
-name:                metamorTHysis-template
+name:                {{name}}
 version:             0.1.0.0
-github:              "githubuser/metamorTHysis-template"
+github:              {{github-username}}{{^github-username}}githubuser{{/github-username}}/{{name}}
 license:             BSD-3-Clause
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2024 Author name here"
+author:              {{author-name}}{{^author-name}}Author name here{{/author-name}}
+maintainer:          {{author-email}}{{^author-email}}example@example.com{{/author-email}}
+copyright:           {{copyright}}{{^copyright}}{{year}}{{^year}}2023{{/year}} {{author-name}}{{^author-name}}Author name here{{/author-name}}{{/copyright}}
+homepage:            https://github.com/{{github-username}}{{^github-username}}githubuser{{/github-username}}/{{name}}#readme
 
 extra-source-files:
 - README.md
@@ -17,7 +18,16 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/githubuser/metamorTHysis-template#readme>
+description:         Please see the README on GitHub at <https://github.com/{{github-username}}{{^github-username}}githubuser{{/github-username}}/{{name}}#readme>
+
+default-extensions:
+- FlexibleInstances
+- ImportQualifiedPost
+- LambdaCase
+- MultiWayIf
+- OverloadedStrings
+- ScopedTypeVariables
+- TupleSections
 
 dependencies:
 - base >= 4.7 && < 5
@@ -35,9 +45,11 @@ ghc-options:
 
 library:
   source-dirs: src
+  dependencies:
+  - metamorTHysis
 
 executables:
-  metamorTHysis-template-exe:
+  {{name}}-exe:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -45,10 +57,11 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - metamorTHysis-template
+    - {{name}}
+    - metamorTHysis-cli
 
 tests:
-  metamorTHysis-template-test:
+  {{name}}-test:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
@@ -56,4 +69,4 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - metamorTHysis-template
+    - {{name}}
