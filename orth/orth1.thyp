@@ -1,0 +1,165 @@
+# This is a "parser" specification file. It's where you specify
+# how plain text is parsed into a list of phonemes. If you don't
+# know what that means, go look at "phonemes.thym" first.
+# These phonemes can then be converted back to plain text, either
+# as the same orthography, or a different one. For information
+# about that, look at "orth1.thyo" and "orth2.thyo".
+
+# To start with, you can specify a name for your orthography,
+# by writing something like...
+
+orthography : orth1
+
+# Along with a name to specify the language/phoneme set you
+# are using.
+
+phoneme set : my_phonemes
+
+# At the moment, these two values are optional and unused, but they
+# may be used in the future to check that the orthography name
+# specified here matches with the name specified for this
+# orthography elsewhere.
+
+# Now, to show that the "header" section is finished, we write the
+# usual section splitter, four or more equal signs in a row.
+
+====
+
+# Now, we're into the class and state declaration section. 
+
+# (Note: you may want to read the section on patterns first before
+#  you read this section. This section comes first simply because
+#  that's how the sections are ordered in the specification files)
+
+# A class is simply a way to treat multiple characters as "Basically
+# the same". 
+# Let's say your orthography has three different kinds of apostrophes,
+# and which one is used depends on the context. However, people often
+# use the wrong kind of apostrophe when typing in this orthography.
+# Therefore, you want to match phonemes that use apostrophes with ANY
+# kind of apostrophe, and not just the "correct" one. If you had to
+# write an extra pattern for each kind of apostrophe, that would be 
+# a pain. Instead, you can declare a class, like so:
+
+class apost : ' ` U+0313 U+0315
+
+# A class declaration consists of the keyword "class", followed by a
+# name, followed by a colon, and finally followed by a space-separated
+# list of characters. For example here, we have the two common ASCII
+# apostrophes, along with two Unicode apostrophes. If you don't 
+# understand/recognise the "U+00..." notation, don't worry; we'll get
+# into it later. 
+
+# [Insert information about states here]
+
+# Now that we're done with the section on classes and states, we can
+# move onto the most important section(s): the pattern section(s).
+# Note that if you don't plan to use classes or states, you can just
+# leave this section blank, but you still need to remember the extra
+# separator.
+
+# (Again, the 4+ equal sign section separator)
+
+====
+
+# The most important part of your phoneme file is the section(s) for
+# patterns. Technically, this can be one or two sections: the first
+# section, for single-phoneme patterns, and the second section, for
+# multi-phoneme patterns. You can actually specify single-phoneme
+# patterns in the multi-phoneme section, so you may want to just
+# skip the single-phoneme section and use that instead. Note that
+# even in the single-phoneme section, you can match multiple characters
+# to the same phoneme, you can just only match one phoneme at a time.
+
+# But before that, what is a pattern? A pattern is just a phoneme
+# (or list of phonemes) matched to a (space-separated) sequence of 
+# characters. You write one like so:
+
+schwa : ə
+
+# In this case, this means that phoneme named "schwa" (names are the
+# ones you specified in the ".thym" file) is matched by the character
+# "ə". You also could have matched this by writing "U+0259" instead of
+# "ə"; i.e.
+
+# schwa : U+0259
+
+# This "U+0..." form is a standard way of referring to a character by
+# its Unicode codepoint. A unicode codepoint is just a standardised index
+# from numbers to characters. In this case, the character "ə" has index
+# "U+0259". The "0259" here is actually just a number in hexadecimal. If
+# you don't know hexadecimal, that's okay; if you know the character you
+# want, you just need to lookup its codepoint. If it's in this "U+..."
+# format, it should be correct.
+
+# You may be wondering why you would use this format instead of using the
+# character itself. Firstly, using the character itself may not be as well
+# supported on some systems as using the "U+..." format. Fortunately, this
+# shouldn't be as much of an issue as it used to be, but it might cause
+# problems in some edge cases.
+
+# The second, and usually more pertinent reason, is that some characters
+# don't work as you might expect. "Modifier" characters often only work
+# when placed directly next to the character to be modified, which doesn't
+# work great since the characters in a pattern are supposed to be space-separated.
+# Also, if you're working with a right-to-left script, such as Arabic, using
+# the characters directly may not result in the order that you expect. In
+# both of these cases, it's best to just use the codepoint format.
+
+# Note that when matching characters that have aspects, you have to specify
+# ALL the aspects that a character has on the left side of the colon. The
+# aspects are matched in the same order as they were specified in the 
+# phoneme specification. So, for example
+
+t unasp : t
+t asp   : t *apost # more info on this later.
+
+# would match all the possible cases for 't'.  Note that this only works
+# like this in the single-phoneme section; in the multi-phoneme section,
+# you have to surround each phoneme+aspects in parentheses to get it to
+# work. e.g.
+
+# (t unasp) : t
+# (t asp)   : t *apost
+
+# Another important thing to note is that matching against a character 
+# automatically generates code for working with both the upper-case and
+# lower-case versions of a character. If, for whatever reason, you want
+# to work with them separately, you can add a "+"/"-" at the start of the
+# right-hand side of the pattern to specify an upper-case only/lower-case
+# only pattern respectively. This is necessary when your orthography doesn't
+# follow the standard upper-case/lower-case rules. e.g.
+
+i : + I
+i : - ɪ
+i : - i
+
+# Notice that you can specify multiple patterns for the same phoneme. This
+# is because people typing in your orthography may not type the correct 
+# character. Thus, you can automatically correct common mistakes where it's
+# unambiguous what the user meant to type. Ambiguous errors, however, are 
+# much more difficult to correct.
+
+# As you may have noticed, not all characters are interpreted as the character
+# itself. "U", "+", and "-" all mean something other than themself. In these
+# cases, you can just insert a backslash "\" before the character to mean the
+# character itself. And, if you want a backslash by itself, just type two 
+# backslashes in a row, i.e. "\\".
+
+# However, these aren't the only special characters that are accepted. Here's
+# a list of special characters that must be "escaped" with a backslash, and
+# what they mean when used on their own.
+
+# + : This is an upper-case pattern
+# - : This is a  lower-case pattern
+# * : Signifies the start of a class usage.
+# ^ : Signifies that this pattern can only come at the beginning of a word.
+# $ : Signifies that this pattern can only come at the end of a word.
+# % : Signifies that this pattern CAN NOT come at the beginning of a word.
+# & : Signifies that this pattern CAN NOT come at the end of a word.
+# @ : Checks the value of a state.
+# ! : Sets the value of a state.
+# # : Signifies the start of a comment.
+
+
+

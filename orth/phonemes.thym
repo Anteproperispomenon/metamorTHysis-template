@@ -137,7 +137,8 @@ v
 f
 
 ** alveolar
-t : aspiration
+t  : aspiration
+ts : aspiration
 d
 n : nasal
 r
@@ -150,5 +151,15 @@ k : aspiration
 g
 ng : nasal
 h
+glot # glottal stop
 
+# When writing your output specification, you can depend on the traits 
+# and groups of the following phoneme. For example, you could change
+# how a vowel is shown depending on whether the following consonant
+# is alveolar or not.
 
+# And that's it for declaring your phoneme set! Note that if need be, you
+# can add new traits (and groups) later on without having to change any of
+# your existing parser/output specifications. Unfortunately, the same is not
+# true of aspects, since they change how you specify phonemes in the other
+# files. 
