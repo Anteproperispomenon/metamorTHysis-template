@@ -50,7 +50,78 @@ class apost : ' ` U+0313 U+0315
 # understand/recognise the "U+00..." notation, don't worry; we'll get
 # into it later. 
 
-# [Insert information about states here]
+# One thing to be careful about with classes: try to avoid putting the
+# same character into more than one class. If you don't intend to use
+# the two possible classes in the same situation, it shouldn't be a problem,
+# but it can be a problem otherwise.
+
+# States, on the other hand, allow you to store information about what
+# you've parsed in the word so far to use later. Let's say that the
+# value of a certain consonant depends on the value of the last vowel. 
+# We can then declare a (value) state like so:
+
+state lastVow : lastA lastE lastI lastO lastU lastSchwa lastAw lastOo
+
+# Then, when we write our patterns later on, we can then use a
+# state-set command like so:
+
+# a : a !lastVow=lastA
+# e : e !lastVow=lastE
+# i : i !lastVow=lastI
+# o : o !lastVow=lastO
+# u : u !lastVow=lastU
+# aw : ɒ !lastVow=lastAw
+# oo : ʊ !lastVow=lastOo
+# schwa : U+0259 !lastVow=lastSchwa
+
+# The basic format of a state-set command is "!stateName=stateVal".
+# Now, when we approach the consonant in question, we can
+# use a state-check command like this:
+
+# l : @lastVow=lastU  ɫ # or U+026B
+# l : @lastVow=lastAw ɫ # or U+026B
+# l : l
+
+# Notice that we don't specify a pattern for every possible value of
+# "lastVow". This is because the "default" pattern, "l : l" will be used
+# if none of the other patterns can be satisfied. Note that the parser
+# will always try patterns with MORE state-checks first before checking
+# ones with fewer, so this "fall-through" behaviour works. You can even
+# check multiple states in the same pattern, so long as you don't check
+# the same state twice (which would either be redundant or mean the pattern
+# would never be successful).
+
+# Like traits, states are divided into boolean states and value-states.
+# Like boolean traits, boolean states are defined by declaring a state without
+# a value-list. e.g.
+
+state seenGlottal
+
+# With boolean states, you can check/set whether they're enabled or disabled by
+# using one of the following possible (case-insensitive) strings:
+
+# On  : yes, true, y, t, on
+# Off : No, false, n, f, off
+
+# Boolean traits always start in the "off" position. If you want a
+# boolean state that starts in the "on" position, you can instead 
+# just invert the meaning of the state, and invert all checks/sets.
+# e.g.
+
+# Finally, value-states can also make use of these on/off values, since
+# value-states start off without any value. You can use both on and off
+# values with check-state operations, with "on" meaning "anything but
+# off" and "off" meaning "none of the defined values". You can even
+# set a value-state to "Off", i.e. changing it to having no value.
+# However, you can't set a value-state to "On", since there's no
+# value specified for it to hold.
+
+# Note: At the moment, there's no way to specify a "default value" for
+# a value-state to take at the beginning of parsing a word. However,
+# you can just replace the "default" state you wanted with off, and
+# just replaces checks for the former "default" state with checks
+# for "off".
+
 
 # Now that we're done with the section on classes and states, we can
 # move onto the most important section(s): the pattern section(s).
@@ -75,14 +146,14 @@ class apost : ' ` U+0313 U+0315
 # (or list of phonemes) matched to a (space-separated) sequence of 
 # characters. You write one like so:
 
-schwa : ə
+schwa : ə !lastVow=lastSchwa
 
 # In this case, this means that phoneme named "schwa" (names are the
 # ones you specified in the ".thym" file) is matched by the character
 # "ə". You also could have matched this by writing "U+0259" instead of
 # "ə"; i.e.
 
-# schwa : U+0259
+# schwa : U+0259 !lastVow=lastSchwa
 
 # This "U+0..." form is a standard way of referring to a character by
 # its Unicode codepoint. A unicode codepoint is just a standardised index
@@ -130,9 +201,9 @@ t asp   : t *apost # more info on this later.
 # only pattern respectively. This is necessary when your orthography doesn't
 # follow the standard upper-case/lower-case rules. e.g.
 
-i : + I
-i : - ɪ
-i : - i
+i : + I !lastVow=lastI
+i : - ɪ !lastVow=lastI
+i : - i !lastVow=lastI
 
 # Notice that you can specify multiple patterns for the same phoneme. This
 # is because people typing in your orthography may not type the correct 
@@ -160,6 +231,104 @@ i : - i
 # @ : Checks the value of a state.
 # ! : Sets the value of a state.
 # # : Signifies the start of a comment.
+
+# For more info on "!" and "@", see the section on states.
+
+# Using '*' is pretty easy; if you've read all through this,
+# you'll have seen it before. You just write an apostrophe
+# followed by the name of a class, and then the pattern will
+# match any character from the class in that position. e.g.
+
+ts asp : t *apost s
+ts asp : t s *apost
+
+# would match any apostrophe in the class "apost" in that
+# position in the pattern. e.g.
+
+# t U+0313 s
+# t s '
+# t s `
+# t ` s
+# t s U+0315
+
+# would all be matched by those two patterns above. As you
+# can see, classes are one of the most important tools for
+# matching phonemes that have multiple possible realisations.
+
+# However, you have to be careful when writing your classes.
+# If the same character occurs in two separate classes, e.g.
+
+# class apost : ' ` U+0313 U+0315
+# class grave : ` U+0300 U+02CB
+
+# And then you have patterns like:
+
+# ts asp : t *apost s
+# th     : t *grave
+
+# Then the parser might run into trouble. To avoid this,
+# you can "split up" the classes like so:
+
+# class apost : ' U+0313 U+0315
+# class grave : U+300 U+02CB
+# class apostOrGrave : `
+
+# And then you can split up your patterns like so:
+
+# ts asp : t *apost s
+# ts asp : t *apostOrGrave s
+# th : t *grave
+# th : t *apostOrGrave
+
+# This way, the parser won't run into the problems with overlapping
+# classes. However, it can be more difficult if you have more complicated
+# overlaps.
+
+# Again, it shouldn't be a problem to use overlapping classes if you don't
+# use them in patterns that overlap, but you may want to try avoiding
+# them to be safe.
+
+# Next, we have the start/end markers, ^/% and $/&. These ensure certain
+# patterns only match if they fall in specific positions. The most commonly
+# used of these is probably "^". This can be useful when the beginning of a
+# word has an implicit phoneme that isn't represented by the orthography.
+# For example, let's say words that start with a vowel actually have an
+# implicit glottal stop before them. In that case, you can go to the
+# multi-phoneme section of the file, and write something like this:
+
+# glot a : ^ a
+# glot e : ^ e
+# glot i : ^ i
+# glot o : ^ o
+# glot u : ^ u
+# glot aw : ^ ɒ # or U+0252
+# glot oo : ^ ʊ # or U+028A
+# glot schwa : ^ ə
+
+# This would make the parser "insert" a glottal stop before a vowel at the
+# start of a word. Similarly, you can also "insert" phonemes at the end
+# of a word with the same trick:
+
+# a h : a $
+# e h : e $
+# etc...
+
+# On the other hand, "%" and "&" are less useful, since they only prevent
+# a pattern from being matched if it's at the start or end of a word
+# respectively. For example, doing something like this:
+
+# glot a : ^ a
+# a : % a
+
+# would be redundant, since the parser would always choose the first parser
+# when parsing the start of a word, and thus would be equivalent to just
+# writing:
+
+# glot a : ^ a
+# a : a
+
+# However, there may be situations where it's more convenient to express
+# a set of patterns using "%" or "&".
 
 
 
