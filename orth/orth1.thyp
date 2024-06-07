@@ -330,5 +330,36 @@ ts asp : t s *apost
 # However, there may be situations where it's more convenient to express
 # a set of patterns using "%" or "&".
 
+# Now, the rest of the phonemes: 
+
+p asp   : p *apost
+p unasp : p
+b : b
+m : m
+v : v 
+f : f
+
+# "ts asp" has already been covered.
+ts unasp : t s
+d : d
+n : n
+r : r
+th : t h
+th : þ
+th : θ
+th : ϑ
+dh : d h
+dh : ð
+
+k asp   : k '
+k unasp : k
+g : g
+ng : n g
+ng : ŋ
+h : h
+glot : ɂ
+glot : ʔ
+
+
 
 

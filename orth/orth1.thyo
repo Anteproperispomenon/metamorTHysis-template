@@ -1,0 +1,28 @@
+
+name : orth1
+
+default case : /at
+
+====
+
+state lastVow : lastA lastE lastI lastO lastU lastSchwa lastAw lastOo
+
+state seenGlottal
+
+====
+
+schwa : ə !lastVow=lastSchwa
+
+i : + I !lastVow=lastI
+i : - ɪ !lastVow=lastI
+
+l @lastVow=lastU  : U+026B
+l @lastVow=lastAw : U+026B
+l : l
+
+(t unasp) : t
+(t asp)   : t '
+
+
+
+
