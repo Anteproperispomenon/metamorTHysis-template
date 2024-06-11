@@ -1,3 +1,8 @@
+# This is an output specification file. It is very Similarl
+# to a parser specification file, but with some significant
+# differences. For more info on the differences, see the 
+# documentation in the main metamorTHysis repository.
+
 
 name : orth1
 
@@ -9,13 +14,26 @@ state lastVow : lastA lastE lastI lastO lastU lastSchwa lastAw lastOo
 
 state seenGlottal
 
+import trait nasal
+
 ====
 
+# Follow patterns. See metamorTHysis docs for more info.
+a >nasal : ã !lastVow=lastA
+a : a !lastVow=lastA
+e : e !lastVow=lastE
+o >nasal : õ !lastVow=lastO
+o : o !lastVow=lastO
+u : u !lastVow=lastU
+aw : ɒ !lastVow=lastAw
+oo : ʊ !lastVow=lastOo
 schwa : ə !lastVow=lastSchwa
 
 i : + I !lastVow=lastI
 i : - ɪ !lastVow=lastI
 
+# Note that state-checks now come BEFORE the colon,
+# instead of after.
 l @lastVow=lastU  : U+026B
 l @lastVow=lastAw : U+026B
 l : l
@@ -23,6 +41,30 @@ l : l
 (t unasp) : t
 (t asp)   : t '
 
+(ts unasp) : t s
+(ts asp)   : t U+0315 s
 
+(p asp  ) : p *apost
+(p unasp) : p
+b : b
+m : m
+v : v 
+f : f
 
+d : d
+n : n
+r : r
+# Showing some examples of changing output
+# depending on state.
+th @lastVow=lastAw : ϑ
+th @lastVow=lastOo : ϑ
+th @lastVow=off : þ
+th : θ
+dh : ð
 
+(k asp)   : k U+0313
+(k unasp) : k
+g : g
+ng : ŋ
+h : h
+glot : ʔ !seenGlottal=on

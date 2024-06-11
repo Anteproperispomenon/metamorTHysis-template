@@ -23,11 +23,13 @@ description:         Please see the README on GitHub at <https://github.com/{{gi
 default-extensions:
 - DataKinds
 - DeriveLift
+- FlexibleContexts
 - FlexibleInstances
 - ImportQualifiedPost
 - LambdaCase
 - MultiWayIf
 - OverloadedStrings
+- PatternSynonyms
 - ScopedTypeVariables
 - TupleSections
 - TypeApplications

@@ -205,6 +205,16 @@ i : + I !lastVow=lastI
 i : - ɪ !lastVow=lastI
 i : - i !lastVow=lastI
 
+a : a !lastVow=lastA
+a : ã !lastVow=lastA
+e : e !lastVow=lastE
+e : 
+o : o !lastVow=lastO
+o : õ !lastVow=lastO
+u : u !lastVow=lastU
+aw : ɒ !lastVow=lastAw
+oo : ʊ !lastVow=lastOo
+
 # Notice that you can specify multiple patterns for the same phoneme. This
 # is because people typing in your orthography may not type the correct 
 # character. Thus, you can automatically correct common mistakes where it's

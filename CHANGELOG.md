@@ -1,4 +1,4 @@
-# Changelog for `metamorTHysis-template`
+# Changelog for `{{name}}`
 
 All notable changes to this project will be documented in this file.
 

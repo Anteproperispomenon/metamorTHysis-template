@@ -1,0 +1,17 @@
+
+# Warning: This example orthography is not yet complete.
+
+orthography : orth2
+
+phoneme set : my_phonemes
+
+====
+
+====
+
+a : a
+e : e
+i : i
+o : o
+u : u
+

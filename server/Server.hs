@@ -1,3 +1,5 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Server
   ( ConvertMessage(..)
   , QueryMessage(..)
@@ -11,6 +13,9 @@ import Metamorth.Server.Types.Embedded
 
 import Metamorth.Server.Processing
 import Metamorth.Server.API
+
+import Metamorth.Server.JS
+import Metamorth.Server.HTML
 
 -- Again, these functions auto-generate most of the
 -- necessary code by themselves. If you get a compile
@@ -28,5 +33,5 @@ makeServantTypes
 -- that can be reached from something like
 -- "localhost:8081/interactive/convert.html".
 generateJS @ConvertAPI
-makeMainHTML inputOrthNameMap outputOrthNameMap
+makeMainHTMLCSS "convert.css" inputOrthNameMap outputOrthNameMap
 

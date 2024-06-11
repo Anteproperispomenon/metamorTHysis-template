@@ -1,3 +1,5 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Main (main) where
 
 import Metamorth.CLI.TH

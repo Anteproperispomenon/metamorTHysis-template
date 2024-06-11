@@ -102,7 +102,7 @@ Orth1
 -- be using the "off" options. Again, the options are case-insensitive.
   unify-branches : off
   group-guards : ON
-  check-states : yes
+  check-states : Yes
 
 -- Finally, we have some more internal options. These can be useful when
 -- debugging, since you'll have a better idea of what went wrong with your
