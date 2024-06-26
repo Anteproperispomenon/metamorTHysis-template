@@ -116,12 +116,22 @@ state seenGlottal
 # However, you can't set a value-state to "On", since there's no
 # value specified for it to hold.
 
+# More finally, it is important to note that states, by default,
+# keep the same value until it is changed by a pattern. If you want
+# states to automatically reset to "off" after any pattern where they
+# aren't explicitly turned on, you can prepend "auto-off" to the
+# beginning of the state declaration, e.g.
+
+# auto-off state lastVow
+
 # Note: At the moment, there's no way to specify a "default value" for
 # a value-state to take at the beginning of parsing a word. However,
 # you can just replace the "default" state you wanted with off, and
 # just replaces checks for the former "default" state with checks
-# for "off".
-
+# for "off". The only issue this causes is with auto-off states; you
+# can't have a state whose initial state and "off" state differ. This
+# shouldn't be much of a problem in practice, but it may come up in
+# some circumstances.
 
 # Now that we're done with the section on classes and states, we can
 # move onto the most important section(s): the pattern section(s).
@@ -233,6 +243,7 @@ oo : ʊ !lastVow=lastOo
 
 # + : This is an upper-case pattern
 # - : This is a  lower-case pattern
+# ~ : This is a direct-case pattern (see below)
 # * : Signifies the start of a class usage.
 # ^ : Signifies that this pattern can only come at the beginning of a word.
 # $ : Signifies that this pattern can only come at the end of a word.
@@ -244,8 +255,15 @@ oo : ʊ !lastVow=lastOo
 
 # For more info on "!" and "@", see the section on states.
 
+# Using '~' is only necessary when the upper-case and lower-case
+# versions of a character are supposed to represent different
+# phonemes. For the moment, any pattern using '~' will be
+# interpreted as a lower-case character. For example, you
+# would have to use them if 'a' and 'A' were supposed to
+# represent different phonemes.
+
 # Using '*' is pretty easy; if you've read all through this,
-# you'll have seen it before. You just write an apostrophe
+# you'll have seen it before. You just write an asterisk
 # followed by the name of a class, and then the pattern will
 # match any character from the class in that position. e.g.
 
