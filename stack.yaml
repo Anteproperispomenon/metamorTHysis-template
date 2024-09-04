@@ -44,7 +44,7 @@ extra-deps:
   # Note: These are pinned to certain commits since Stack requires it.
   # In the future, they will be pinned to more stable commits or branches.
   - git: https://github.com/Anteproperispomenon/metamorTHysis.git
-    commit: 146ee458538bdd2247799199735039a4fea5b64b
+    commit: 40ef0d92185fd05ecc1345ee3a66847ab46a7481
   - git: https://github.com/Anteproperispomenon/metamorTHysis-cli.git
     commit: 0e66d6125b53e85f9c4784439b1a181d68f874da
   - git: https://github.com/Anteproperispomenon/metamorTHysis-server.git
