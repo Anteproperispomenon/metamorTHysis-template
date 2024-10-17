@@ -235,7 +235,8 @@ oo : ʊ !lastVow=lastOo
 # itself. "U", "+", and "-" all mean something other than themself. In these
 # cases, you can just insert a backslash "\" before the character to mean the
 # character itself. And, if you want a backslash by itself, just type two 
-# backslashes in a row, i.e. "\\".
+# backslashes in a row, i.e. "\\". These special characters are also called
+# "Markers".
 
 # However, these aren't the only special characters that are accepted. Here's
 # a list of special characters that must be "escaped" with a backslash, and
@@ -357,6 +358,18 @@ ts asp : t s *apost
 
 # However, there may be situations where it's more convenient to express
 # a set of patterns using "%" or "&".
+
+# NOTE: As of a more recent version, there's even more reason to avoid
+# using "&". Because of the order in which patterns are processed, using
+# "&" can interfere with follow patterns that start the same way. For example,
+
+# v : v &
+# w : v >(oo|u)
+
+# ...would mean a "v" in the middle of a word would always be interpreted
+# as "v", and never "w", even if followed by an "oo" or "u". For more information
+# on these follow-patterns, see "docs/parsing.md" from the main metamorTHysis
+# repository.
 
 # Now, the rest of the phonemes: 
 
