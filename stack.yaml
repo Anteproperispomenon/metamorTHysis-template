@@ -52,7 +52,7 @@ extra-deps:
   - git: https://github.com/Anteproperispomenon/metamorTHysis-server-js.git
     commit: 7b68cff1754529127858ae066873dcc2df1e65a3
   - git: https://github.com/Anteproperispomenon/metamorTHysis-server-html.git
-    commit: 91f235037448584c5f8b392086a8225a406a5746
+    commit: 99ad02ca34dda8abc4d219df177ba75d3466f296
   - file-io-0.1.1
   - servant-js-0.9.4.2
 
