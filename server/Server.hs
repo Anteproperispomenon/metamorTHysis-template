@@ -33,5 +33,5 @@ makeServantTypes
 -- that can be reached from something like
 -- "localhost:8081/interactive/convert.html".
 generateJS @ConvertAPI
-makeMainHTMLCSS "convert.css" inputOrthNameMap outputOrthNameMap
+makeMainHTMLCSS "convert.css" inputOrthNameMap outputOrthNameMap languageDetails
 
